@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import myUserRoute from "./routes/MyUserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
+import restaurantRoute from "./routes/RestaurantRoute";
 
 // connect to our mongodb database
 mongoose
@@ -32,6 +33,9 @@ app.use("/api/my/user", myUserRoute);
 
 // for restaurant
 app.use("/api/my/restaurant", myRestaurantRoute);
+
+// to search for our restauraants\\
+app.use("/api/restaurant", restaurantRoute);
 
 app.listen(7000, () => {
   console.log("Server staretd on localhost:7000");

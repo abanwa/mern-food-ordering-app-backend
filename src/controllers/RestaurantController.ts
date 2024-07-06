@@ -1,6 +1,25 @@
 import { Request, Response } from "express";
 import Restaurant from "../models/restaurant";
 
+// THIS WILL GET A SPECIFIC RESTAURANT BASE ON THE RESTAURANT ID
+const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurantId = req.params.restaurantId;
+
+    const restaurant = await Restaurant.findById(restaurantId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "restaurant not found" });
+    }
+
+    // This automatically add the status of 200 whenever we did not specify the status
+    res.json(restaurant);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 const searchRestaurants = async (req: Request, res: Response) => {
   try {
     // we will get the city name from the request parameter
@@ -82,5 +101,6 @@ const searchRestaurants = async (req: Request, res: Response) => {
 };
 
 export default {
+  getRestaurant,
   searchRestaurants
 };

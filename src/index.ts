@@ -6,6 +6,7 @@ import myUserRoute from "./routes/MyUserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import myRestaurantRoute from "./routes/MyRestaurantRoute";
 import restaurantRoute from "./routes/RestaurantRoute";
+import orderRoute from "./routes/OrderRoute";
 
 // connect to our mongodb database
 mongoose
@@ -19,9 +20,14 @@ cloudinary.config({
 });
 
 const app = express();
+
+app.use(cors());
+
+// Here, if we convert it to stripe response from webhook to json, the validation will not match, so we will use it as the raw response. the raw only applies to the stripe webhook response
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+
 // this will automatically convert the body of any api request to json so that we do not have to do it by ourselves
 app.use(express.json());
-app.use(cors());
 
 // this is a basic endpoint we can call to check if the server has started
 app.get("/health", async (req: Request, res: Response) => {
@@ -36,6 +42,9 @@ app.use("/api/my/restaurant", myRestaurantRoute);
 
 // to search for our restauraants\\
 app.use("/api/restaurant", restaurantRoute);
+
+// to make our order payment on stripe
+app.use("/api/order", orderRoute);
 
 app.listen(7000, () => {
   console.log("Server staretd on localhost:7000");

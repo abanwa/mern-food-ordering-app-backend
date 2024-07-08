@@ -15,6 +15,21 @@ const upload = multer({
   }
 });
 
+router.get(
+  "/order",
+  jwtCheck,
+  jwtParse,
+  MyRestaurantController.getMyRestaurantOrders
+);
+
+// THIS WILL UPDATE THE RESTAURANT ORDER STATUS
+router.patch(
+  "/order/:orderId/status",
+  jwtCheck,
+  jwtParse,
+  MyRestaurantController.updateOrderStatus
+);
+
 // This is to get an existing restaurant
 router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
 

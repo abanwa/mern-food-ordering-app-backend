@@ -22,6 +22,21 @@ type CheckoutSessionRequest = {
   restaurantId: string;
 };
 
+// THIS WILL THE ORDERS OF THE LOGGED IN USER
+const getMyOrder = async (req: Request, res: Response) => {
+  try {
+    // the populate will add the restaurant and the user record to the orders because we referenced then when we created the order table/.document in the model / order.ts
+    const orders = await Order.find({ user: req.userId })
+      .populate("restaurant")
+      .populate("user");
+
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
 // FOR THE STRIPE WEBHOOK HANDLER
 const stripeWebhookHandler = async (req: Request, res: Response) => {
   /*
@@ -187,6 +202,7 @@ const createSession = async (
 };
 
 export default {
+  getMyOrder,
   createCheckoutSession,
   stripeWebhookHandler
 };
